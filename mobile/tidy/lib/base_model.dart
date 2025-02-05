@@ -10,6 +10,10 @@ class BaseModel extends Model {
     notifyListeners();
   }
 
+  void loadData(String inEntityType, dynamic inDatabase) async {
+    entitylist = await inDatabase.getAll();
+  }
+
   void setStackIndex(int inStackIndex) {
     stackIndex = inStackIndex;
     notifyListeners();
