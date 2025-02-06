@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import '../utils.dart' as utils;
@@ -61,5 +62,37 @@ class NotesDbWorker {
         'INSERT INTO notes (id, title, content, color)'
         'VALUES(?, ?, ?, ?)',
         [id, inNote.title, inNote.content, inNote.color]);
+  }
+
+  Future<Note> get(int inID) async {
+    Database db = await database;
+    var rec = await db.query(
+      'notes',
+      where: 'id = ?',
+      whereArgs: [inID],
+    );
+    return noteFrommap(rec.first);
+  }
+
+  Future<List> getAll() async {
+    Database db = await database;
+    var recs = await db.query('notes');
+    var list = recs.isNotEmpty ? recs.map((m) => noteFrommap(m)).toList() : [];
+    return list;
+  }
+
+  Future update(Note note) async {
+    Database db = await database;
+    return await db.update('notes', noteToMap(note),
+        where: 'id = ?', whereArgs: [note.id]);
+  }
+
+  Future delete(int inID) async {
+    Database db = await database;
+    return await db.delete(
+      'notes',
+      where: 'id = ?',
+      whereArgs: [inID],
+    );
   }
 }

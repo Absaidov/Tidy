@@ -19,8 +19,8 @@ class Notes extends StatelessWidget {
           return IndexedStack(
             index: model.stackIndex,
             children: [
-              NotesList(),
-              NotesEntry(),
+              // NotesList(),
+              // NotesEntry(),
             ],
           );
         },
