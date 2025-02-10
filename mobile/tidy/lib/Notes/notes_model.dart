@@ -15,7 +15,7 @@ class Note {
   }
 }
 
-class NotesModel extends BaseModel {
+class NotesModel extends BaseProvider {
   late String color;
 
   void setColor(String inColor) {

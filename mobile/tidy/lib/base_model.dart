@@ -1,21 +1,32 @@
-import 'package:scoped_model/scoped_model.dart';
+import 'package:flutter/material.dart';
+// import 'package:scoped_model/scoped_model.dart';
 
-class BaseModel extends Model {
-  int stackIndex = 0;
-  List entitylist = [];
-  var entityBeingEdited;
-  String? chosenDate;
+class BaseProvider extends ChangeNotifier {
+  int _stackIndex = 0;
+  List _entityList = [];
+  // ignore: prefer_typing_uninitialized_variables
+  var _entityBeingEdited;
+  String? _chosenDate;
+
+  //* Геттеры
+  int get stackIndex => _stackIndex;
+  List get entityList => _entityList;
+  dynamic get entityBeingEdited => _entityBeingEdited;
+  String? get chosenDate => _chosenDate;
+  //* Сеттер
+  //* Установка выбранной даты
   void setChosenDate(String inDate) {
-    chosenDate = inDate;
-    notifyListeners();
+    _chosenDate = inDate;
+    notifyListeners(); //* Обновить UI
   }
 
-  void loadData(String inEntityType, dynamic inDatabase) async {
-    entitylist = await inDatabase.getAll();
+  //* Загрузка данных
+  Future<void> loadData(String inEntityType, dynamic inDatabase) async {
+    _entityList = await inDatabase.getAll();
   }
 
   void setStackIndex(int inStackIndex) {
-    stackIndex = inStackIndex;
-    notifyListeners();
+    _stackIndex = inStackIndex;
+    notifyListeners(); //* Обновить UI
   }
 }
