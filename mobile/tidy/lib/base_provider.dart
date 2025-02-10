@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class BaseProvider extends ChangeNotifier {
   int _stackIndex = 0;
   List _entityList = [];
-  // ignore: prefer_typing_uninitialized_variables
+  //* Исправить тип переменной (предварительно на String)
   var _entityBeingEdited;
   String? _chosenDate;
 
@@ -13,6 +13,7 @@ class BaseProvider extends ChangeNotifier {
   List get entityList => _entityList;
   dynamic get entityBeingEdited => _entityBeingEdited;
   String? get chosenDate => _chosenDate;
+
   //* Сеттер
   //* Установка выбранной даты
   void setChosenDate(String inDate) {
@@ -25,6 +26,7 @@ class BaseProvider extends ChangeNotifier {
     _entityList = await inDatabase.getAll();
   }
 
+  //* Переключение между экранами
   void setStackIndex(int inStackIndex) {
     _stackIndex = inStackIndex;
     notifyListeners(); //* Обновить UI

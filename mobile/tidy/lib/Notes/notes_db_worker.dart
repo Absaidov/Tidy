@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import '../utils.dart' as utils;
-import 'notes_model.dart';
+import 'notes_provider.dart';
 
 class NotesDbWorker {
   NotesDbWorker._();
@@ -14,6 +14,7 @@ class NotesDbWorker {
     return _db;
   }
 
+  //* Инициализация или создание БД SQLite
   Future<Database> init() async {
     String path = join(utils.docsDir!.path, 'notes.db');
     Database db = await openDatabase(

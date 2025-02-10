@@ -1,6 +1,6 @@
-import 'package:tidy/base_model.dart';
+import 'package:tidy/base_provider.dart';
 
-import '../Notes/notes_model.dart';
+import 'notes_provider.dart';
 
 class Note {
   late int id;
@@ -15,7 +15,7 @@ class Note {
   }
 }
 
-class NotesModel extends BaseProvider {
+class NotesProvider extends BaseProvider {
   late String color;
 
   void setColor(String inColor) {
@@ -23,5 +23,3 @@ class NotesModel extends BaseProvider {
     notifyListeners();
   }
 }
-
-NotesModel notesModel = NotesModel();

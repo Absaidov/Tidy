@@ -2,9 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:tidy/Appointments/appointments.dart';
 import 'package:tidy/Contacts/сontacts.dart';
 import 'package:tidy/Notes/notes.dart';
+import 'package:tidy/base_provider.dart';
 import 'utils.dart' as utils;
 
 //* Главный виджет MAIN, где стартует приложение
@@ -25,46 +27,53 @@ class Tidy extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: DefaultTabController(
-          length: 4,
-          child: Scaffold(
-            appBar: AppBar(
-              title: const Text('Tidy'),
-              bottom: const TabBar(tabs: [
-                Tab(
-                  icon: Icon(
-                    Icons.date_range,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => BaseProvider(),
+        )
+      ],
+      child: MaterialApp(
+        home: DefaultTabController(
+            length: 4,
+            child: Scaffold(
+              appBar: AppBar(
+                title: const Text('Tidy'),
+                bottom: const TabBar(tabs: [
+                  Tab(
+                    icon: Icon(
+                      Icons.date_range,
+                    ),
+                    text: "Appointments",
                   ),
-                  text: "Appointments",
-                ),
-                Tab(
-                  icon: Icon(
-                    Icons.contacts,
+                  Tab(
+                    icon: Icon(
+                      Icons.contacts,
+                    ),
+                    text: "Contacts",
                   ),
-                  text: "Contacts",
-                ),
-                Tab(
-                  icon: Icon(
-                    Icons.note,
+                  Tab(
+                    icon: Icon(
+                      Icons.note,
+                    ),
+                    text: "Notes",
                   ),
-                  text: "Notes",
-                ),
-                Tab(
-                  icon: Icon(
-                    Icons.assignment_turned_in,
+                  Tab(
+                    icon: Icon(
+                      Icons.assignment_turned_in,
+                    ),
+                    text: "Tasks",
                   ),
-                  text: "Tasks",
-                ),
+                ]),
+              ),
+              body: TabBarView(children: [
+                const Appointments(),
+                const Contacts(),
+                Notes(),
+                // Tasks(),
               ]),
-            ),
-            body: TabBarView(children: [
-              const Appointments(),
-              const Contacts(),
-              Notes(),
-              Tasks(),
-            ]),
-          )),
+            )),
+      ),
     );
   }
 }
