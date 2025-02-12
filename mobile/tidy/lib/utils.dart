@@ -2,13 +2,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
-import 'base_model.dart';
+import 'base_provider.dart';
 
 Directory? docsDir;
 
 Future selectDate(
   BuildContext context,
-  BaseModel inModel,
+  BaseProvider inProvider,
   String inDateString,
 ) async {
   DateTime initialDate = DateTime.now();
@@ -27,7 +27,8 @@ Future selectDate(
     lastDate: DateTime(2100),
   );
   if (picked != null) {
-    inModel.setChosenDate(DateFormat.yMMMMd('en_US').format(picked.toLocal()));
+    inProvider
+        .setChosenDate(DateFormat.yMMMMd('en_US').format(picked.toLocal()));
     return '${picked.day},${picked.month},${picked.year}';
   }
 }

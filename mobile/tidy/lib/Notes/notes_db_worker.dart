@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import '../utils.dart' as utils;
+import '../utils.dart' as utils; //* Подключаем утилиты для docsDir
 import 'notes_provider.dart';
 
 class NotesDbWorker {
@@ -9,30 +9,33 @@ class NotesDbWorker {
   static final NotesDbWorker db = NotesDbWorker._();
 
   Database? _db;
-  Future get database async {
+
+  //* Получение экземпляра базы данных
+  Future<Database?> get database async {
     _db ??= await init();
     return _db;
   }
 
-  //* Инициализация или создание БД SQLite
+  //* Инициализация БД SQLite
   Future<Database> init() async {
     String path = join(utils.docsDir!.path, 'notes.db');
-    Database db = await openDatabase(
+    return await openDatabase(
       path,
       version: 1,
-      onOpen: (db) {},
-      onCreate: (Database inDB, int version) async {
-        await inDB.execute("CREATE TABLE IF NOT EXISTS notes ("
-            "id INTEGER PRIMARY KEY"
-            "title TEXT"
-            "content TEXT"
-            "color TEXT"
-            ")");
+      onCreate: (Database db, int version) async {
+        await db.execute('''
+          CREATE TABLE IF NOT EXISTS notes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT,
+            content TEXT,
+            color TEXT
+          )
+        ''');
       },
     );
-    return db;
   }
 
+  //* Преобразование Map в объект Note
   Note noteFrommap(Map inMap) {
     Note note = Note();
     note.id = inMap['id'];
@@ -42,6 +45,7 @@ class NotesDbWorker {
     return note;
   }
 
+  //* Преобразование объекта Note в Map
   Map<String, dynamic> noteToMap(Note inNote) {
     Map<String, dynamic> map = <String, dynamic>{};
     map['id'] = inNote.id;
@@ -51,18 +55,23 @@ class NotesDbWorker {
     return map;
   }
 
-  Future create(Note inNote) async {
-    Database db = await database;
-    var val = await db.rawQuery(
-      'SELECT MAX(id) + 1 AS id FROM notes',
-    );
-    dynamic id = val.first["id"];
+  // Future create(Note inNote) async {
+  //   Database db = await database;
+  //   var val = await db.rawQuery(
+  //     'SELECT MAX(id) + 1 AS id FROM notes',
+  //   );
+  //   dynamic id = val.first["id"];
 
-    id ??= 1;
-    return await db.rawInsert(
-        'INSERT INTO notes (id, title, content, color)'
-        'VALUES(?, ?, ?, ?)',
-        [id, inNote.title, inNote.content, inNote.color]);
+  //   id ??= 1;
+  //   return await db.rawInsert(
+  //       'INSERT INTO notes (id, title, content, color)'
+  //       'VALUES(?, ?, ?, ?)',
+  //       [id, inNote.title, inNote.content, inNote.color]);
+  // }
+  /// Добавление новой заметки
+  Future<int> create(Note note) async {
+    Database db = await database;
+    return await db.insert('notes', noteToMap(note));
   }
 
   Future<Note> get(int inID) async {
