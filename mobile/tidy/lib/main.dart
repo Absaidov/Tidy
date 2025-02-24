@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:tidy/Appointments/appointments.dart';
 import 'package:tidy/Contacts/сontacts.dart';
 import 'package:tidy/Notes/notes.dart';
+import 'package:tidy/Notes/notes_provider.dart';
+import 'package:tidy/Tasks/tasks.dart';
 import 'package:tidy/base_provider.dart';
 import 'utils.dart' as utils;
 
@@ -31,6 +33,9 @@ class Tidy extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (context) => BaseProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => NotesProvider(),
         )
       ],
       child: MaterialApp(
@@ -66,11 +71,11 @@ class Tidy extends StatelessWidget {
                   ),
                 ]),
               ),
-              body: TabBarView(children: [
-                const Appointments(),
-                const Contacts(),
+              body: const TabBarView(children: [
+                Appointments(),
+                Contacts(),
                 Notes(),
-                // Tasks(),
+                Tasks(),
               ]),
             )),
       ),
