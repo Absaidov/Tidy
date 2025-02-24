@@ -8,11 +8,10 @@ class NotesDbWorker {
   NotesDbWorker._();
   static final NotesDbWorker db = NotesDbWorker._();
 
-  Database? _db;
+  late Database _db;
 
   //* Получение экземпляра базы данных
-  Future<Database?> get database async {
-    _db ??= await init();
+  Future<Database> get database async {
     return _db;
   }
 
@@ -55,54 +54,37 @@ class NotesDbWorker {
     return map;
   }
 
-  // Future create(Note inNote) async {
-  //   Database db = await database;
-  //   var val = await db.rawQuery(
-  //     'SELECT MAX(id) + 1 AS id FROM notes',
-  //   );
-  //   dynamic id = val.first["id"];
-
-  //   id ??= 1;
-  //   return await db.rawInsert(
-  //       'INSERT INTO notes (id, title, content, color)'
-  //       'VALUES(?, ?, ?, ?)',
-  //       [id, inNote.title, inNote.content, inNote.color]);
-  // }
-  /// Добавление новой заметки
+  //* Добавление новой заметки
   Future<int> create(Note note) async {
     Database db = await database;
     return await db.insert('notes', noteToMap(note));
   }
 
-  Future<Note> get(int inID) async {
+  //* Получение заметки по ID
+  Future<Note?> get(int id) async {
     Database db = await database;
-    var rec = await db.query(
-      'notes',
-      where: 'id = ?',
-      whereArgs: [inID],
-    );
-    return noteFrommap(rec.first);
+    List<Map<String, dynamic>> results =
+        await db.query('notes', where: 'id = ?', whereArgs: [id]);
+    return results.isNotEmpty ? noteFrommap(results.first) : null;
   }
 
-  Future<List> getAll() async {
+  //* Получение всех заметок
+  Future<List<Note>> getAll() async {
     Database db = await database;
-    var recs = await db.query('notes');
-    var list = recs.isNotEmpty ? recs.map((m) => noteFrommap(m)).toList() : [];
-    return list;
+    List<Map<String, dynamic>> results = await db.query('notes');
+    return results.map((map) => noteFrommap(map)).toList();
   }
 
-  Future update(Note note) async {
+  //* Обновление заметки
+  Future<int> update(Note note) async {
     Database db = await database;
     return await db.update('notes', noteToMap(note),
         where: 'id = ?', whereArgs: [note.id]);
   }
 
-  Future delete(int inID) async {
+  //* Удаление заметки
+  Future<int> delete(int id) async {
     Database db = await database;
-    return await db.delete(
-      'notes',
-      where: 'id = ?',
-      whereArgs: [inID],
-    );
+    return await db.delete('notes', where: 'id = ?', whereArgs: [id]);
   }
 }
