@@ -78,13 +78,21 @@ class NotesDbWorker {
   //* Обновление заметки
   Future<int> update(Note note) async {
     Database db = await database;
-    return await db.update('notes', noteToMap(note),
-        where: 'id = ?', whereArgs: [note.id]);
+    return await db.update(
+      'notes',
+      noteToMap(note),
+      where: 'id = ?',
+      whereArgs: [note.id],
+    );
   }
 
   //* Удаление заметки
   Future<int> delete(int id) async {
     Database db = await database;
-    return await db.delete('notes', where: 'id = ?', whereArgs: [id]);
+    return await db.delete(
+      'notes',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 }
